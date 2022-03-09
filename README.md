@@ -1,5 +1,6 @@
 # GKE Binary Authorization
 
+
 As a DevSecOps Engineer, I wish application images that I trust should only be deployed in my infrastructure. My cluster should reject all other un-trusted images.
 
 Google Kubernetes Engine provides a feature **Binary Authorization** which can help us achieve the above goal.
@@ -8,13 +9,16 @@ Binary Authorization is a deploy-time security control that ensures only trusted
 
 
 ![image](https://user-images.githubusercontent.com/37524392/157366127-92cfc004-6ec4-4faf-8c90-26ca6620e0c3.png)
-Image Credits: https://codelabs.developers.google.com
+
+> Image Credits: https://codelabs.developers.google.com
 
 With Binary Authorization, you require images to be signed by trusted authorities during the development process and then enforce signature validation when deploying.
 
 By enforcing validation, you can gain tighter control over your container environment by ensuring only verified images are integrated into the build-and-release process.
 
 Ref: https://cloud.google.com/binary-authorization/docs
+
+
 
 In this blog, I am going to implement Binary authorization in a GKE cluster. The aim is to allow only images that is built using Circle CI. (Assuming Circle CI checks have been passed before pushing the image to the registry)
 
@@ -31,14 +35,20 @@ Before starting, Let’s understand some keywords that will be used while implem
 - **Attestation** is a statement from the Attestor that an image is ready to be deployed. In our case we will use an attestation that refers to the signing of our image
 
 
-##Enable Binary Authorisation
+## Enable Binary Authorisation
 
 - Go to the Security page at Google Cloud Console.
+
 - Enable the Binary Authorization API if not
+
 - Go to the Kubernetes Engine page at Google Cloud Console.
+
 - Select the cluster and click EDIT.
+
 - Set Binary Authorization to Enabled.
+
 - Click SAVE.
+
 
 ![image](https://user-images.githubusercontent.com/37524392/157366778-97ec0d23-c9cd-46af-858c-410173af7a7f.png)
 
@@ -53,7 +63,9 @@ gcloud container clusters create \
 ```
 
 
-##Create Attestor
+
+## Create Attestor
+
 
 - Create a PKIX key pair
   ```
@@ -61,7 +73,7 @@ gcloud container clusters create \
   openssl ecparam -genkey -name prime256v1 -noout -out ${PRIVATE_KEY_FILE}
   ## extract the public key ##
   openssl ec -in ${PRIVATE_KEY_FILE} -pubout -out ${PUBLIC_KEY_FILE}
-```
+  ```
 
 - Go to the Binary Authorization page for the attestor project.
 
@@ -84,7 +96,7 @@ gcloud container clusters create \
 Please note that these steps can be done programatically using `gcloud` command. ref: [https://cloud.google.com/binary-authorization/docs](https://cloud.google.com/binary-authorization/docs)
 
 
-##Attesting An Image
+## Attesting An Image
 
 - Create payload Json with the artifact URL.
 
