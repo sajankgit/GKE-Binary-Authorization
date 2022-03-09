@@ -106,6 +106,7 @@ gcloud container binauthz create-signature-payload \
 ```
 
 - Sign the payload json with the private key created
+
   `openssl dgst -sha256 -sign private.key generated_payload.json > ec_signature`
   
 - Get public key ID from the attestor to create attestations.
@@ -126,4 +127,25 @@ gcloud container binauthz create-signature-payload \
   ```
 
 
+**Note**: We attest the images with its Digest instead of tag. So in deployment file we should give image digest in image name.
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <name>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <name>
+  template:
+    metadata:
+      labels:
+        app: <name>
+    spec:
+      containers:
+      - name: <name>
+        image: **<artifact-url>/<image-path>@<image-digest>**
+```
 
