@@ -149,3 +149,8 @@ spec:
         image: **<artifact-url>/<image-path>@<image-digest>**
 ```
 
+So, once image is attested with attestor name, public key and signature, the cluster will only allow this image to be deployed if the policy is set so. 
+
+Images are attested only once it passes all the tests including inline scanning and other checks.
+
+This way we can ensure that all the deployed images are trusted and can be deployed in our infrastructure with confidence.
